@@ -1,28 +1,17 @@
 <template>
-	<nav class="navbar" role="navigation" aria-label="main navigation">
+	<nav class="navbar" role="navigation">
 		<div class="navbar-brand">
-			<h2 class="navbar-item">What</h2>
-			<a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
-				<span aria-hidden="true"></span>
-				<span aria-hidden="true"></span>
-				<span aria-hidden="true"></span>
-			</a>
+			<router-link class="navbar-item is-size-3 is-size-4-mobile" to="/">What do I want for...?</router-link>
 		</div>
 
-		<div id="navbarBasicExample" class="navbar-menu">
-			<div class="navbar-start">
-				<a class="navbar-item">
-					Home
-				</a>
-			</div>
-
+		<div class="navbar-menu is-active">
 			<div class="navbar-end">
 				<div class="navbar-item">
 					<input class="input mr-2" type="text" placeholder="Search..." />
 					<div class="buttons">
-						<a class="button is-primary">
+						<router-link to="/list/new" class="button is-primary">
 							<strong>New List</strong>
-						</a>
+						</router-link>
 					</div>
 				</div>
 			</div>

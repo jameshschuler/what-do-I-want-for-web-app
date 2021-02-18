@@ -1,7 +1,20 @@
 <template>
-  <router-view/>
+	<navbar />
+	<div class="columns">
+		<div class="column is-10 is-offset-1 is-12-mobile">
+			<router-view />
+		</div>
+	</div>
 </template>
 
-<style lang="scss">
+<script lang="ts">
+import Navbar from '@/components/Navbar.vue';
 
-</style>
+export default {
+	components: {
+		Navbar,
+	},
+};
+</script>
+
+<style lang="scss"></style>
