@@ -1,17 +1,41 @@
 <template>
-	<div>ListDetail</div>
+	<section class="section is-medium">
+		<Loader v-if="loading" />
+		<h1 class="title" v-if="!loading && list">{{ list.name }}</h1>
+	</section>
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 import { useRoute } from 'vue-router';
+import { List } from '../../models/list';
+import { loadList } from '@/services/listService';
+import { AppError, isAppError } from '@/models/error';
+import Loader from '@/components/Loader.vue';
 
 export default defineComponent({
-	setup() {},
-	mounted() {
-		const route = useRoute();
-		const id = route.params.id;
+	components: {
+		Loader,
+	},
+	setup() {
+		const loading = ref(true);
+		const list = ref<List | null>(null);
+		const error = ref<AppError | null>(null);
 
-		console.log(+id);
+		const load = async () => {
+			const route = useRoute();
+			const response = await loadList(+route.params.id);
+			if (isAppError(response)) {
+				error.value = response;
+			} else {
+				list.value = response;
+			}
+
+			loading.value = false;
+		};
+
+		load();
+
+		return { error, list, loading };
 	},
 });
 </script>
