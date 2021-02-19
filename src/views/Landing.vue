@@ -6,10 +6,9 @@
 </template>
 
 <script lang="ts">
-import { Options, Vue } from 'vue-class-component';
+import { defineComponent } from 'vue';
 
-@Options({
-	components: {},
-})
-export default class Landing extends Vue {}
+const Landing = defineComponent({});
+
+export default Landing;
 </script>
