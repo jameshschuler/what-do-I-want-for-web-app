@@ -1,5 +1,6 @@
-import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
-import Landing from '../views/Landing.vue'
+import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
+import NotFound from '../components/NotFound.vue';
+import Landing from '../views/Landing.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -24,7 +25,7 @@ const routes: Array<RouteRecordRaw> = [
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/list/ListDetail.vue' )
   },
-  // TODO: { path: '*', component: NotFoundComponent }
+  { path: '/:pathMatch(.*)*', component: NotFound }
 ]
 
 const router = createRouter( {
