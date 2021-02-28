@@ -1,14 +1,18 @@
 <template>
-	<section class="section is-medium">
+	<section class="section is-small">
 		<Loader v-if="loading" />
 		<div v-if="!loading && list">
 			<h1 class="title">{{ list.name }}</h1>
-			<h2 class="subtitle">{{ list.createdBy }}</h2>
 
-			<div class="is-flex is-justify-content-space-between is-align-items-center">
-				<h2 class="subtitle">{{ createdAtFormatted }}</h2>
+			<div class="is-flex is-justify-content-space-between is-align-items-center mb-2">
+				<h2 class="subtitle mb-0">Created By {{ list.createdBy }}</h2>
+				<span v-if="list.published" class="tag is-success is-light is-medium">Published</span>
 			</div>
+			<h2 class="subtitle">{{ createdAtFormatted }}</h2>
 		</div>
+	</section>
+	<section v-if="!loading && list" class="section is-small">
+		<h1 class="title">Items</h1>
 	</section>
 </template>
 <script lang="ts">
