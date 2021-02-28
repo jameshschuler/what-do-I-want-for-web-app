@@ -13,20 +13,50 @@
 	</section>
 	<section v-if="!loading && list" class="section is-small">
 		<h1 class="title">Items</h1>
+		<message v-if="listItems && listItems.length === 0" messageType="is-info" message="No items found." title="Info" />
+		<table class="table w-100" v-if="listItems && listItems.length !== 0">
+			<thead>
+				<tr>
+					<th>Value</th>
+					<th>Link</th>
+					<th>Claimed</th>
+					<th>Claimed By</th>
+					<th>Created</th>
+					<th>Disabled</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr v-for="(item, index) in listItems" :key="index">
+					<td>{{ item.value }}</td>
+					<td>
+						<a v-if="item.link" v-bind:href="item.link" target="_blank" rel="noopener noreferrer">View Item</a>
+					</td>
+					<td>{{ item.isClaimed ? 'Yes' : 'No' }}</td>
+					<td>{{ item.claimedBy }}</td>
+					<td>
+						{{ processDate(item.createdAt) }}
+					</td>
+					<td>{{ item.isDisabled ? 'Yes' : 'No' }}</td>
+				</tr>
+			</tbody>
+		</table>
 	</section>
 </template>
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { List } from '../../models/list';
-import { loadList } from '@/services/listService';
+import { loadList, loadListItems } from '@/services/listService';
 import { AppError, isAppError } from '@/models/error';
 import Loader from '@/components/Loader.vue';
 import dayjs from 'dayjs';
+import Message from '@/components/Message.vue';
+import { ListItem } from '@/models/listItem';
 
 export default defineComponent({
 	components: {
 		Loader,
+		Message,
 	},
 	computed: {
 		createdAtFormatted(this: any) {
@@ -35,9 +65,17 @@ export default defineComponent({
 				.toString();
 		},
 	},
+	methods: {
+		processDate(date: string) {
+			return dayjs(date)
+				.format('MMMM DD, YYYY h:mm A')
+				.toString();
+		},
+	},
 	setup() {
 		const loading = ref(true);
 		const list = ref<List | null>(null);
+		const listItems = ref<ListItem[] | null>(null);
 		const error = ref<AppError | null>(null);
 
 		const load = async () => {
@@ -47,6 +85,12 @@ export default defineComponent({
 				error.value = response;
 			} else {
 				list.value = response;
+
+				// TODO: order by create date
+				const listItemsResponse = await loadListItems(response.wantListId);
+				if (!isAppError(listItemsResponse)) {
+					listItems.value = listItemsResponse;
+				}
 			}
 
 			loading.value = false;
@@ -54,8 +98,12 @@ export default defineComponent({
 
 		load();
 
-		return { error, list, loading };
+		return { error, list, listItems, loading };
 	},
 });
 </script>
-<style lang="scss"></style>
+<style lang="scss">
+.w-100 {
+	width: 100%;
+}
+</style>
