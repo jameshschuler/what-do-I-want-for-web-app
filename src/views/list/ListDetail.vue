@@ -5,7 +5,7 @@
 			<h1 class="title">{{ list.name }}</h1>
 
 			<div class="is-flex is-justify-content-space-between is-align-items-center mb-2">
-				<h2 class="subtitle mb-0">Created By {{ list.createdBy }}</h2>
+				<h2 class="subtitle mb-0">Created by {{ list.createdBy }}</h2>
 				<span v-if="list.published" class="tag is-success is-light is-medium">Published</span>
 			</div>
 			<h2 class="subtitle">{{ createdAtFormatted }}</h2>
@@ -86,10 +86,16 @@ export default defineComponent({
 			} else {
 				list.value = response;
 
-				// TODO: order by create date
 				const listItemsResponse = await loadListItems(response.wantListId);
 				if (!isAppError(listItemsResponse)) {
-					listItems.value = listItemsResponse;
+					const sorted = listItemsResponse.sort((a: ListItem, b: ListItem) => {
+						let da = new Date(a.createdAt),
+							db = new Date(b.createdAt);
+						// @ts-ignore
+						let result = db - da;
+						return result;
+					}) as ListItem[];
+					listItems.value = sorted;
 				}
 			}
 

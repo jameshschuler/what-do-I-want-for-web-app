@@ -1,9 +1,14 @@
 
 export interface AppError {
-    errors: string;
+    errors: ValidationError[];
     message: string;
     statusCode: number;
     statusText: string;
+}
+
+export interface ValidationError {
+    message: string;
+    path: string;
 }
 
 export function processError ( error: any ) {

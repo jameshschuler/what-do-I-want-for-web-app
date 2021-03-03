@@ -1,7 +1,17 @@
 import { AppError, processError } from '@/models/error';
-import { List } from '@/models/list';
+import { CreateListRequest, List } from '@/models/list';
 import { ListItem } from '@/models/listItem';
 import axios from 'axios';
+
+export async function createList ( createListRequest: CreateListRequest ): Promise<string | AppError> {
+    try {
+        const response = await axios.post( `${process.env.VUE_APP_API_BASE}/list`, createListRequest );
+
+        return response.headers.location;
+    } catch ( err ) {
+        return processError( err );
+    }
+}
 
 export async function loadList ( id: string ): Promise<List | AppError> {
     try {

@@ -5,6 +5,7 @@
 	</section>
 
 	<section class="section is-small">
+		<message v-if="validationError" messageType="is-danger" :message="validationError" title="Validation Error" />
 		<form @submit.prevent="onSubmit">
 			<div class="columns">
 				<div class="column is-half is-full-mobile">
@@ -18,10 +19,11 @@
 				</div>
 				<div class="column is-half is-full-mobile">
 					<div class="field">
-						<label class="label">Created By</label>
+						<label class="label">Created By *</label>
 						<div class="control">
 							<input v-model="list.createdBy" class="input" type="text" placeholder="Optional" />
 						</div>
+						<p v-if="errors.createdBy" class="help is-danger">{{ errors.createdBy }}</p>
 					</div>
 				</div>
 			</div>
@@ -33,6 +35,9 @@
 <script lang="ts">
 import router from '@/router';
 import { defineComponent, ref } from 'vue';
+import { createList } from '@/services/listService';
+import { isAppError, ValidationError } from '@/models/error';
+import Message from '@/components/Message.vue';
 
 interface NewList {
 	name: string;
@@ -40,29 +45,50 @@ interface NewList {
 }
 
 export default defineComponent({
+	components: {
+		Message,
+	},
 	setup() {
 		const loading = ref(false);
 		const list = ref<NewList>({ name: '', createdBy: '' });
-		const errors = ref({ name: '' });
+		const errors = ref({ name: '', createdBy: '' });
+		const validationError = ref('');
 
-		const onSubmit = () => {
+		const onSubmit = async () => {
 			errors.value.name = '';
+			errors.value.createdBy = '';
 
 			if (list.value.name === '') {
 				errors.value.name = 'Name is required.';
 				return;
 			}
 
+			if (list.value.createdBy === '') {
+				errors.value.createdBy = 'Created By is required.';
+				return;
+			}
+
 			loading.value = true;
 
-			setTimeout(() => {
-				loading.value = false;
-				console.log('submitted');
-				router.push({ name: 'ListDetail', params: { id: '1' } });
-			}, 1000);
+			const response = await createList({ name: list.value.name, createdBy: list.value.createdBy });
+
+			if (!isAppError(response)) {
+				const segments = response.split('/');
+				const id = segments[segments.length - 1];
+
+				// TODO: should redirect to edit page
+				router.push({ name: 'ListDetail', params: { id } });
+			} else {
+				const error = response.errors[0];
+				if (error) {
+					validationError.value = error.message;
+				}
+			}
+
+			loading.value = false;
 		};
 
-		return { errors, list, loading, onSubmit };
+		return { errors, list, loading, validationError, onSubmit };
 	},
 });
 </script>
