@@ -12,14 +12,18 @@ export interface ValidationError {
 }
 
 export function processError ( error: any ) {
+    console.log( 'error' )
     const { statusText, data: { errors, message, status } } = error.response;
 
-    return {
+    const appError = {
         statusText,
-        errors,
-        message,
-        statusCode: status
+        errors: errors || [],
+        message: message || 'Oops! Something went wrong please try again.',
+        statusCode: status || 500
     } as AppError;
+
+    console.log( appError )
+    return appError;
 }
 
 export function isAppError ( toBeDetermined: AppError | any ): toBeDetermined is AppError {

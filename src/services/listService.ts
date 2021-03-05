@@ -1,5 +1,5 @@
 import { AppError, processError } from '@/models/error';
-import { CreateListRequest, List } from '@/models/list';
+import { CreateListRequest, List, UpdateListRequest } from '@/models/list';
 import { ListItem } from '@/models/listItem';
 import axios from 'axios';
 
@@ -23,11 +23,21 @@ export async function loadList ( id: string ): Promise<List | AppError> {
     }
 }
 
-export async function loadListItems ( id: string ): Promise<ListItem[] | AppError> {
+export async function loadListItems ( id: number ): Promise<ListItem[] | AppError> {
     try {
         const response = await axios.get( `${process.env.VUE_APP_API_BASE}/list/${id}/item` );
 
         return response.data;
+    } catch ( err ) {
+        return processError( err );
+    }
+}
+
+export async function updateList ( updateListRequest: UpdateListRequest ): Promise<string | AppError> {
+    try {
+        const response = await axios.post( `${process.env.VUE_APP_API_BASE}/list/${updateListRequest.wantListId}`, updateListRequest );
+
+        return '';
     } catch ( err ) {
         return processError( err );
     }

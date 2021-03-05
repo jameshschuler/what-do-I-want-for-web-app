@@ -27,7 +27,7 @@
 					</div>
 				</div>
 			</div>
-			<button :class="{ 'is-loading': loading }" type="submit" class="button is-primary">Create</button>
+			<button :class="{ 'is-loading': loading }" type="submit" class="button is-medium is-primary">Create</button>
 		</form>
 	</section>
 </template>
@@ -38,11 +38,7 @@ import { defineComponent, ref } from 'vue';
 import { createList } from '@/services/listService';
 import { isAppError, ValidationError } from '@/models/error';
 import Message from '@/components/Message.vue';
-
-interface NewList {
-	name: string;
-	createdBy: string;
-}
+import { NewList } from '@/models/list';
 
 export default defineComponent({
 	components: {
@@ -76,8 +72,7 @@ export default defineComponent({
 				const segments = response.split('/');
 				const id = segments[segments.length - 1];
 
-				// TODO: should redirect to edit page
-				router.push({ name: 'ListDetail', params: { id } });
+				router.push({ name: 'EditList', params: { id } });
 			} else {
 				const error = response.errors[0];
 				if (error) {

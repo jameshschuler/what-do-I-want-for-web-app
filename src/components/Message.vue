@@ -1,7 +1,7 @@
 <template>
 	<article class="message" :class="messageType">
 		<div v-if="hasHeader" class="message-header">
-			<p>Info</p>
+			<p>{{ title }}</p>
 			<button v-if="isDismissable" class="delete" aria-label="delete"></button>
 		</div>
 		<div class="message-body">
