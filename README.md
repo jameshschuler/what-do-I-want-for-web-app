@@ -11,3 +11,7 @@ An app that allows users to create and manage wish lists for various events (e.g
 -   SCSS
 -   Bulma
 -   Chai / Mocha
+
+## Trello
+
+https://trello.com/b/kIc7K6Xw/what-do-i-want-for

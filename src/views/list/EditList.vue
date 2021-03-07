@@ -5,7 +5,7 @@
 			<message messageType="is-danger" :message="error.message" :title="error.statusText" hasHeader="true" />
 		</div>
 		<div v-if="!loading && !error">
-			<div class="is-flex is-justify-content-space-between is-align-items-center mb-3">
+			<div class="is-flex is-justify-content-space-between is-align-items-center mb-4">
 				<h1 class="title mb-0">Edit List</h1>
 				<div class="buttons">
 					<button class="button is-info is-outlined">Share</button>
@@ -44,7 +44,7 @@
 					<h1 class="title">Items</h1>
 					<message v-if="listItems && listItems.length === 0" messageType="is-info" message="No items found." title="Info" />
 				</section> -->
-				<button :class="{ 'is-loading': loading }" type="submit" class="button is-medium is-primary">Save</button>
+				<button :class="{ 'is-loading': loading }" type="submit" class="button is-primary">Save</button>
 			</form>
 		</div>
 	</section>
@@ -117,7 +117,7 @@ export default defineComponent({
 
 			loading.value = true;
 
-			const response = await updateList({ name: list.value.name, wantListId: list.value.wantListId });
+			const response = await updateList(list.value.specialId, { name: list.value.name });
 
 			if (!isAppError(response)) {
 				// TODO: do something

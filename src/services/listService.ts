@@ -33,11 +33,12 @@ export async function loadListItems ( id: number ): Promise<ListItem[] | AppErro
     }
 }
 
-export async function updateList ( updateListRequest: UpdateListRequest ): Promise<string | AppError> {
+export async function updateList ( specialId: string, updateListRequest: UpdateListRequest ): Promise<string | AppError> {
     try {
-        const response = await axios.post( `${process.env.VUE_APP_API_BASE}/list/${updateListRequest.wantListId}`, updateListRequest );
+        console.log( updateListRequest );
+        const response = await axios.put( `${process.env.VUE_APP_API_BASE}/list/${specialId}`, updateListRequest );
 
-        return '';
+        return response.headers.location;
     } catch ( err ) {
         return processError( err );
     }

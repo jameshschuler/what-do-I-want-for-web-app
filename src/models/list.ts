@@ -16,7 +16,7 @@ export interface CreateListRequest {
 
 export interface UpdateListRequest {
     name: string;
-    wantListId: number;
+    updatedBy?: string;
 }
 
 export interface NewList {
