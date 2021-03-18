@@ -9,7 +9,7 @@
 				<h1 class="title mb-0">Edit List</h1>
 				<div class="buttons">
 					<button class="button is-info is-outlined">Share</button>
-					<button v-if="!list.published" class="button is-warning">Publish</button>
+					<button v-if="!list.published" class="button is-warning" @click="publishList">Publish</button>
 				</div>
 			</div>
 
@@ -47,12 +47,14 @@
 				<button :class="{ 'is-loading': loading }" type="submit" class="button is-primary">Save</button>
 			</form>
 		</div>
+		<modal :is-active="showingModal" />
 	</section>
 </template>
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import Loader from '@/components/Loader.vue';
 import Message from '@/components/Message.vue';
+import Modal from '@/components/Modal.vue';
 import { AppError, isAppError } from '@/models/error';
 import { useRoute } from 'vue-router';
 import { loadList, loadListItems, updateList } from '@/services/listService';
@@ -65,16 +67,19 @@ export default defineComponent({
 	components: {
 		Loader,
 		Message,
+		Modal,
 	},
 	setup() {
 		const error = ref<AppError | null>(null);
 		const formErrors = ref({ name: '' });
 		const loading = ref(true);
 		const list = ref<EditList>({ createdAt: '', createdBy: '', name: '', listItems: [], specialId: '', wantListId: 0 });
+		const showingModal = ref(false);
 		const validationError = ref('');
 
+		const route = useRoute();
+
 		const load = async () => {
-			const route = useRoute();
 			const response = await loadList(route.params.id.toString());
 			if (isAppError(response)) {
 				error.value = response;
@@ -120,7 +125,7 @@ export default defineComponent({
 			const response = await updateList(list.value.specialId, { name: list.value.name });
 
 			if (!isAppError(response)) {
-				// TODO: do something
+				load();
 			} else {
 				const error = response.errors[0];
 				if (error) {
@@ -135,7 +140,13 @@ export default defineComponent({
 
 		load();
 
-		return { error, formErrors, list, loading, validationError, onSubmit };
+		return { error, formErrors, list, loading, showingModal, validationError, onSubmit };
+	},
+	methods: {
+		publishList() {
+			console.log('ah!', this.showingModal);
+			this.showingModal = true;
+		},
 	},
 });
 </script>

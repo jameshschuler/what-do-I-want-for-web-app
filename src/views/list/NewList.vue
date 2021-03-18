@@ -71,7 +71,7 @@ export default defineComponent({
 			if (!isAppError(response)) {
 				const segments = response.split('/');
 				const id = segments[segments.length - 1];
-
+				console.log('pushing here');
 				router.push({ name: 'EditList', params: { id } });
 			} else {
 				const error = response.errors[0];
