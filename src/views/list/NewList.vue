@@ -27,7 +27,7 @@
 					</div>
 				</div>
 			</div>
-			<button :class="{ 'is-loading': loading }" type="submit" class="button is-medium is-primary">Create</button>
+			<button :class="{ 'is-loading': loading }" type="submit" class="button is-primary">Create</button>
 		</form>
 	</section>
 </template>
@@ -36,7 +36,7 @@
 import router from '@/router';
 import { defineComponent, ref } from 'vue';
 import { createList } from '@/services/listService';
-import { isAppError, ValidationError } from '@/models/error';
+import { isAppError } from '@/models/error';
 import Message from '@/components/Message.vue';
 import { NewList } from '@/models/list';
 
@@ -71,7 +71,6 @@ export default defineComponent({
 			if (!isAppError(response)) {
 				const segments = response.split('/');
 				const id = segments[segments.length - 1];
-				console.log('pushing here');
 				router.push({ name: 'EditList', params: { id } });
 			} else {
 				const error = response.errors[0];

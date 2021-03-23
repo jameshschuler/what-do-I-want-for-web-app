@@ -47,7 +47,15 @@
 				<button :class="{ 'is-loading': loading }" type="submit" class="button is-primary">Save</button>
 			</form>
 		</div>
-		<modal :is-active="showingModal" />
+		<modal
+			action-button-text="Publish"
+			action-button-type="is-success"
+			:is-active="showingModal"
+			@close-modal="closeModal()"
+			@confirm="confirm()"
+			message="Are you sure you want to publish this list?"
+			title="Publish List"
+		/>
 	</section>
 </template>
 <script lang="ts">
@@ -144,8 +152,15 @@ export default defineComponent({
 	},
 	methods: {
 		publishList() {
-			console.log('ah!', this.showingModal);
 			this.showingModal = true;
+		},
+		confirm() {
+			console.log('confirmed');
+			// TODO: call api to publish list
+			// if successful, close modal and navigate to detail view
+		},
+		closeModal() {
+			this.showingModal = false;
 		},
 	},
 });
